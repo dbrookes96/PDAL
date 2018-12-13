@@ -65,9 +65,9 @@
 #       define be32toh ntohl
 #       define le32toh(x) (x)
                         
-#       define htobe64 htonll
+#       define htobe64(x) (((uint64_t)htonl((uint32_t)(x)) << 32) + (uint64_t)htonl((uint32_t)((uint64_t)(x) >> 32)))
 #       define htole64(x) (x)
-#       define be64toh ntohll
+#       define be64toh(x) (((uint64_t)ntohl((uint32_t)(x)) << 32) + (uint64_t)ntohl((uint32_t)((uint64_t)(x) >> 32)))
 #       define le64toh(x) (x)
                          
 #   elif BYTE_ORDER == BIG_ENDIAN
