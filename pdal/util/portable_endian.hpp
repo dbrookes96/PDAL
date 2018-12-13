@@ -51,23 +51,47 @@
       
 #elif defined(__WINDOWS__)
                     
-#   include <winsock2.h>
-                     
 #   if BYTE_ORDER == LITTLE_ENDIAN
-                      
-#       define htobe16 htons
+
+        inline static uint16_t EndianSwap16(uint16_t u)
+        {
+            return (u << 8) |
+                   (u >> 8);
+        }
+
+#       define htobe16 EndianSwap16
 #       define htole16(x) (x)
-#       define be16toh ntohs
+#       define be16toh EndianSwap16
 #       define le16toh(x) (x)
-                       
-#       define htobe32 htonl
+
+        inline static uint32_t EndianSwap32(uint32_t u)
+        {
+            return ((u & 0x000000FF) << 24) |
+                   ((u & 0xFF000000) >> 24) |
+                   ((u & 0x0000FF00) << 8) |
+                   ((u & 0x00FF0000) >> 8);
+        }
+
+#       define htobe32 EndianSwap32
 #       define htole32(x) (x)
-#       define be32toh ntohl
+#       define be32toh EndianSwap32
 #       define le32toh(x) (x)
-                        
-#       define htobe64 htonll
+
+        inline static uint64_t EndianSwap64(uint64_t u)
+        {
+            return ((u & 0x00000000000000FF) << 56) |
+                   ((u & 0xFF00000000000000) >> 56) |
+                   ((u & 0x000000000000FF00) << 40) |
+                   ((u & 0x00FF000000000000) >> 40) |
+                   ((u & 0x0000000000FF0000) << 24) |
+                   ((u & 0x0000FF0000000000) >> 24) |
+                   ((u & 0x00000000FF000000) << 8) |
+                   ((u & 0x000000FF00000000) >> 8);
+        }
+
+#       define htobe64 EndianSwap64
 #       define htole64(x) (x)
-#       define be64toh ntohll
+#       define be64toh EndianSwap64
 #       define le64toh(x) (x)
                          
 #   elif BYTE_ORDER == BIG_ENDIAN
